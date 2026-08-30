@@ -1,3 +1,5 @@
 # Admin and Setup
 
-This repository was initialized in the local workspace and is ready to be published to GitHub.
+My workspace for learning Git and GitHub.
+
+Published at https://github.com/dancohen88/Admin-and-Setup
