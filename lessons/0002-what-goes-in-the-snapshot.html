@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Goes in the Snapshot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="crumb">
+    <span>GitHub</span>
+    <span class="sep">/</span>
+    <span class="num">Lesson 02</span>
+  </div>
+
+  <h1>What Goes in the Snapshot</h1>
+
+  <p class="standfirst">Your most recent commit says it updated the README. It never touched the
+  README &mdash; it added <code>MISSION.md</code>. That isn&rsquo;t git misbehaving. It&rsquo;s git
+  doing exactly what you asked, and the gap between those two things is this entire lesson.</p>
+
+  <div class="masthead-meta">
+    <span class="chip">13 minutes</span>
+    <span class="chip git">git status</span>
+    <span class="chip git">the staging area</span>
+  </div>
+</header>
+
+<main>
+
+<h2>The situation</h2>
+
+<p>Since lesson 01 you&rsquo;ve run the <code>add &rarr; commit &rarr; push</code> loop under your
+own name, twice, unaided. That&rsquo;s the part that matters and it worked. But look at what the
+second one actually contains:</p>
+
+<div class="term" data-copy>
+  <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git log -1 --stat
+
+<span class="x">    Update README to reflect published state</span>
+
+<span class="x"> MISSION.md | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)</span></code></pre>
+</div>
+
+<p>The message promises a README update. The contents are <code>MISSION.md</code>. The README is
+not in there at all &mdash; and that commit is already on GitHub, where the message is the only
+thing most people will ever read.</p>
+
+<p>You didn&rsquo;t do anything careless. You hit the exact trap this lesson exists to remove:
+your first <code>git add README.md</code> reported <code>nothing added to commit</code>, because
+the file hadn&rsquo;t been changed yet. By the time a commit succeeded, what was in it was a
+different file &mdash; and the message you&rsquo;d written for the first attempt came along with
+it.</p>
+
+<div class="note bad">
+  <span class="label">Why the first attempt did nothing</span>
+  <p>Naming a file in <code>git add</code> does <strong>not</strong> mean &ldquo;include this
+  file.&rdquo; It means &ldquo;take the changes currently sitting in this file.&rdquo; An unedited
+  file contains no changes, so <code>git add</code> picked up nothing, and
+  <code>git commit</code> had nothing to record.</p>
+  <p>git does not store files. It stores <em>differences you have chosen</em>.</p>
+</div>
+
+<p>We&rsquo;re leaving <code>1845eb6</code> as it is &mdash; it&rsquo;s pushed, and rewriting
+published history is a sharp tool for much later. The repair isn&rsquo;t to that commit. It&rsquo;s
+that every commit after it says what it holds.</p>
+
+<p>And there is plenty waiting. Ask the repo what state it&rsquo;s in:</p>
+
+<div class="term" data-copy>
+  <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git status
+
+<span class="o">On branch main
+Your branch is up to date with 'origin/main'.</span>
+
+<span class="x">Untracked files:</span>
+<span class="c">  (use "git add &lt;file&gt;..." to include in what will be committed)</span>
+<span class="x">	NOTES.md
+	RESOURCES.md
+	assets/
+	learning-records/
+	lessons/
+	reference/</span>
+
+<span class="c">nothing added to commit but untracked files present</span></code></pre>
+</div>
+
+<p>Every page of this course is sitting in that list, on one laptop, backed up by nothing. By the
+end of the page it&rsquo;ll be on GitHub &mdash; in two commits that each tell the truth.</p>
+
+<h2>The one idea</h2>
+
+<p>A change you make has to travel through three places before it&rsquo;s safe. Almost every
+confusing thing git says is really just telling you which of the three something is in.</p>
+
+<div class="compare three">
+  <div class="col git">
+    <h4>Working directory</h4>
+    <p class="gloss">on disk</p>
+    <ul>
+      <li>Every edit you save</li>
+      <li>git can see it</li>
+      <li>Not in the next commit</li>
+      <li>Gone if you delete it</li>
+    </ul>
+  </div>
+  <div class="col git">
+    <h4>Staging area</h4>
+    <p class="gloss">the box</p>
+    <ul>
+      <li>What <code>add</code> puts in</li>
+      <li>Nothing sealed yet</li>
+      <li><em>Is</em> the next commit</li>
+      <li>You can take it out</li>
+    </ul>
+  </div>
+  <div class="col git">
+    <h4>Commit</h4>
+    <p class="gloss">sealed</p>
+    <ul>
+      <li>What <code>commit</code> seals</li>
+      <li>Permanent and named</li>
+      <li>Still only on your Mac</li>
+      <li>Needs <code>push</code> to leave</li>
+    </ul>
+  </div>
+</div>
+
+<p>All three are amber &mdash; all three are git, on your machine, with the Wi-Fi off. GitHub
+doesn&rsquo;t appear until <code>push</code>, which you already know how to do.</p>
+
+<p>The middle one is the part nobody explains. <strong>The staging area is a box you put changes
+into.</strong> <code>git add</code> puts a change in; <code>git commit</code> seals whatever is in
+the box and labels it. Nothing else goes in that snapshot, no matter what else you&rsquo;ve been
+editing.</p>
+
+<p>Which makes <code>git status</code> readable. It isn&rsquo;t one list &mdash; it&rsquo;s up to
+three, and the heading over each one tells you where those changes are:</p>
+
+<div class="scroll-x">
+<table>
+  <tr><th>What <code>status</code> calls it</th><th>What that means</th><th>In the next commit?</th></tr>
+  <tr><td>Untracked files</td><td>git has never recorded this file, ever</td><td>No</td></tr>
+  <tr><td>Changes not staged for commit</td><td>You edited a file git already knows</td><td>No</td></tr>
+  <tr><td>Changes to be committed</td><td>Changes you put in the box</td><td>Yes</td></tr>
+</table>
+</div>
+
+<p>Right now your repo shows only the first heading, which is why it looks so empty. Nothing is in
+the box yet.</p>
+
+<div class="note">
+  <span class="label">Why the box exists at all</span>
+  <p>It looks like a pointless extra step until the first morning you fix a bug <em>and</em> rewrite
+  a paragraph <em>and</em> rename a file, all before lunch. Those are three unrelated things, and a
+  history that records them as one lump is a history nobody can read or undo selectively.</p>
+  <p>The box lets you take one pile of edits and ship it as several honest commits. That is the
+  entire reason it is there.</p>
+</div>
+
+<div class="quiz" data-quiz>
+  <p class="q-stem">You edit three files, then run <code>git add notes.md</code> and commit. What does that commit hold?</p>
+  <button class="q-opt" data-correct>Only the changes to notes.md</button>
+  <button class="q-opt">Every change in all three</button>
+  <button class="q-opt">All files git already tracks</button>
+  <button class="q-opt">Nothing until you also push</button>
+  <div class="q-why">
+    <p>Only what you put in the box. The other two files keep their edits &mdash; they&rsquo;re
+    still sitting in your working directory, perfectly safe, just not in this snapshot. And note
+    the last option: <code>push</code> only sends commits that already exist. It never creates
+    one.</p>
+  </div>
+  <button class="q-retry">try again</button>
+</div>
+
+<h2>Do it</h2>
+
+<p>Six untracked entries, two different ideas: the lesson pages themselves, and the notes about the
+course. So &mdash; two commits.</p>
+
+<ol class="steps">
+
+  <li>
+    <h3>Read the status as lists, not as noise</h3>
+    <p>Run it again, and this time read the heading rather than the filenames:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git status --short
+
+<span class="x">?? NOTES.md
+?? RESOURCES.md
+?? assets/
+?? learning-records/
+?? lessons/
+?? reference/</span></code></pre>
+    </div>
+    <p><code>--short</code> is the form you&rsquo;ll actually live in. <code>??</code> means
+    untracked &mdash; git has never seen this and won&rsquo;t touch it until told.</p>
+    <p>Four of those six are folders. git never tracks a folder, only files, so when
+    <em>nothing</em> inside one is tracked it collapses the whole thing to one line rather than
+    listing twenty files you haven&rsquo;t asked about yet.</p>
+  </li>
+
+  <li>
+    <h3>Put the first group in the box</h3>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git add lessons reference assets</code></pre>
+    </div>
+    <p>Nothing printed. That&rsquo;s normal &mdash; git commands that succeed are usually silent.
+    Don&rsquo;t take the silence on trust; look in the box:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git status --short
+
+<span class="o">A  assets/artifact-urls.json
+A  assets/build-artifact.py
+A  assets/copy-button.js
+A  assets/course.css
+A  assets/quiz.js
+A  lessons/0001-your-name-on-your-work.html
+A  lessons/0002-what-goes-in-the-snapshot.html
+A  reference/0001-glossary.html</span>
+<span class="x">?? NOTES.md
+?? RESOURCES.md
+?? learning-records/</span></code></pre>
+    </div>
+    <p>Eight entries flipped from <code>??</code> to <code>A</code> &mdash; added, in the box. The
+    three you didn&rsquo;t name stayed exactly where they were. Naming a folder staged the files
+    inside it, which is the one shortcut worth having.</p>
+    <p>The page you are reading is on that list.</p>
+  </li>
+
+  <li>
+    <h3>Know what <code>git add .</code> really does</h3>
+    <p>You will see <code>git add .</code> in every tutorial on the internet. It means
+    &ldquo;everything in this folder, whatever it happens to be.&rdquo; It works, and it is how
+    people accidentally publish a 400&nbsp;MB video, a folder of holiday photos, or a file with a
+    password in it.</p>
+    <div class="note warn">
+      <span class="label">The habit worth building now</span>
+      <p>Name what you mean, or run <code>git status</code> first and know what
+      <code>.</code> is about to sweep up. Not because <code>git add .</code> is wrong &mdash;
+      because a public repo remembers everything, and &ldquo;I&rsquo;ll delete it later&rdquo;
+      doesn&rsquo;t work once it&rsquo;s pushed.</p>
+    </div>
+  </li>
+
+  <li>
+    <h3>Seal it with a message that&rsquo;s true</h3>
+    <p>Write the message <em>after</em> looking in the box, describing what&rsquo;s in it:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git commit -m <span class="s">"Add lesson 01, the glossary, and the shared stylesheet"</span>
+
+<span class="o">[main 3f2a1c9] Add lesson 01, the glossary, and the shared stylesheet
+ 8 files changed, 1204 insertions(+)</span></code></pre>
+    </div>
+    <p>Your hash and line count will differ &mdash; the shape is what matters. Now ask the same
+    question we opened the lesson with:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git log -1 --stat</code></pre>
+    </div>
+    <p>This time the message and the file list agree. That&rsquo;s the whole repair: not clever
+    commands, just looking in the box before you seal it.</p>
+    <p>A message that works: <strong>one line, present tense, says what the change does.</strong>
+    If you can&rsquo;t say it in one line, that&rsquo;s not a writing problem &mdash; there are two
+    commits in your box.</p>
+  </li>
+
+  <li>
+    <h3>Do the second one yourself</h3>
+    <p>Same three moves, no hand-holding: stage the notes, check the box, seal it.</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git add NOTES.md RESOURCES.md learning-records
+<span class="p">$ </span>git status --short
+<span class="p">$ </span>git commit -m <span class="s">"Add course notes, resources, and learning records"</span></code></pre>
+    </div>
+    <p><code>learning-records/</code> is my running notes on how <em>you</em> are getting on. If
+    you&rsquo;d rather that wasn&rsquo;t on the public internet, leave it out &mdash; stage
+    <code>NOTES.md RESOURCES.md</code> only, and shorten the message to match. Keeping files out
+    permanently is <code>.gitignore</code>, later in the course.</p>
+  </li>
+
+  <li>
+    <h3>Send them</h3>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git push
+<span class="p">$ </span>git log --oneline -3</code></pre>
+    </div>
+    <p>One push, two commits. Push moves everything you&rsquo;ve committed since last time &mdash;
+    it isn&rsquo;t per-commit, and you don&rsquo;t have to do it after every single one.</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>gh repo view --web</code></pre>
+    </div>
+    <p>The course is on the front page of your repo, in two commits whose messages describe them
+    &mdash; sitting directly above one that doesn&rsquo;t.</p>
+  </li>
+
+</ol>
+
+<div class="note warn">
+  <span class="label">The gotcha this creates</span>
+  <p>The box holds a <em>copy</em>, taken the moment you ran <code>git add</code>. Stage a file,
+  edit it again, and <code>git status</code> shows that one file in <strong>both</strong> lists at
+  once &mdash; the staged version and the newer unstaged one. Nothing is broken; it&rsquo;s the
+  clearest proof the box is a real, separate place.</p>
+  <p>The fix is to <code>git add</code> it again, which replaces what&rsquo;s in the box.</p>
+</div>
+
+<div class="note good">
+  <span class="label">What you just did</span>
+  <p>You took one pile of unrelated work, split it deliberately into two commits, checked the
+  contents of each before sealing it, and pushed both in one go. That&rsquo;s not a beginner
+  workflow you&rsquo;ll grow out of &mdash; that&rsquo;s the loop, and it doesn&rsquo;t change when
+  the repo gets bigger.</p>
+</div>
+
+<div class="quiz" data-quiz>
+  <p class="q-stem"><code>git status</code> lists one file as both staged and not staged. Why?</p>
+  <button class="q-opt" data-correct>You edited it after staging it</button>
+  <button class="q-opt">You staged the same file twice</button>
+  <button class="q-opt">The file is corrupt on disk</button>
+  <button class="q-opt">git is waiting for a push</button>
+  <div class="q-why">
+    <p>Staging copies the change as it looked at that moment. Editing afterwards creates a second,
+    newer change that isn&rsquo;t in the box &mdash; so git honestly reports both. Commit now and
+    you get the older version. <code>git add</code> it again and the box catches up.</p>
+  </div>
+  <button class="q-retry">try again</button>
+</div>
+
+<div class="reading">
+  <span class="label">Read this next &mdash; 8 minutes</span>
+  <span class="title"><a href="https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository">Pro Git &sect;2.2 &mdash; Recording Changes to the Repository</a></span>
+  <p>The same model, from the canonical source, with the lifecycle diagram this lesson describes in
+  words. Read to the end of &ldquo;Staging Modified Files&rdquo; and stop &mdash; the rest of the
+  chapter is ground we haven&rsquo;t covered.</p>
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You can now put work into a repo that already exists. The mission is to publish work that
+doesn&rsquo;t &mdash; and that&rsquo;s lesson 03: taking an empty folder with nothing in it and
+having it live on GitHub, under your name, in a couple of minutes. Every step of it is a command
+you already know except the first one.</p>
+
+<p>Still deliberately unresolved: <code>e0c3903</code> has nobody&rsquo;s name on it, and
+<code>1845eb6</code> has a message that lies. Both are fixable. Both are history rewriting, and
+that comes after you&rsquo;ve learned to undo things that <em>haven&rsquo;t</em> been published.</p>
+
+<div class="ask">
+  <p><strong>Ask me anything about this.</strong> Especially here &mdash; the staging area is the
+  single most common place beginners quietly give up and start copying commands. If a
+  <code>git status</code> came back looking different to the page, paste it at me. That&rsquo;s
+  the fastest thing you can do.</p>
+  <p>Two worth asking now: <em>&ldquo;How do I take something back out of the box?&rdquo;</em> and
+  <em>&ldquo;What if I commit with a message I immediately regret?&rdquo;</em></p>
+</div>
+
+</main>
+
+<nav class="footer-nav">
+  <a href="0001-your-name-on-your-work.html">&larr; Lesson 01</a>
+  <a href="../reference/0001-glossary.html">Glossary &rarr;</a>
+  <a href="../MISSION.md">Mission</a>
+  <a href="https://github.com/dancohen88/Admin-and-Setup">Your repo &#8599;</a>
+</nav>
+
+</div>
+
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/copy-button.js" defer></script>
+</body>
+</html>

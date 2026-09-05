@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git &amp; GitHub Glossary</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="crumb">
+    <span>GitHub</span>
+    <span class="sep">/</span>
+    <span class="num">Reference 01</span>
+  </div>
+
+  <h1>Git &amp; GitHub Glossary</h1>
+
+  <p class="standfirst">The vocabulary, in the order it starts to matter. Every lesson in this
+  course uses these words to mean exactly these things.</p>
+
+  <div class="masthead-meta">
+    <span class="chip">Living document</span>
+    <span class="chip git">git &mdash; the tool</span>
+    <span class="chip hub">GitHub &mdash; the website</span>
+  </div>
+</header>
+
+<main>
+
+<div class="note">
+  <span class="label">How to read the tags</span>
+  <p>Two different products share this vocabulary, and confusing them is the single most common
+  source of beginner frustration. Each term is tagged with which one owns it:
+  <span class="tag git">git</span> for the program on your Mac,
+  <span class="tag hub">github</span> for the website.</p>
+</div>
+
+<h2>The two systems</h2>
+
+<dl class="gloss">
+  <dt>git <span class="tag git">git</span></dt>
+  <dd>A program on your computer that records snapshots of a folder over time. Completely
+  offline. It has nothing to do with GitHub, works fine with no internet connection, and
+  predates GitHub by three years.</dd>
+
+  <dt>GitHub <span class="tag hub">github</span></dt>
+  <dd>A website that stores copies of git repositories and adds a social layer &mdash; profiles,
+  issues, pull requests. One of several such sites; GitLab and Codeberg are others.
+  <strong>git is the tool, GitHub is a place to put the results.</strong></dd>
+</dl>
+
+<h2>Things that hold your work</h2>
+
+<dl class="gloss">
+  <dt>repository <span class="also">repo</span> <span class="tag git">git</span></dt>
+  <dd>A folder git is tracking, plus the hidden <code>.git</code> subfolder holding its entire
+  history. Delete <code>.git</code> and you have an ordinary folder again, with every version
+  but the current one gone.</dd>
+
+  <dt>working directory <span class="also">working tree</span> <span class="tag git">git</span></dt>
+  <dd>The files as they exist right now, the ones you can open and edit. The only part of a repo
+  you see in Finder.</dd>
+
+  <dt>staging area <span class="also">the index</span> <span class="tag git">git</span></dt>
+  <dd>A holding pen between your edits and a commit. You <code>git add</code> files into it to say
+  &ldquo;these changes belong in the next snapshot.&rdquo; It exists so one commit can contain
+  some of your changes rather than all of them.</dd>
+
+  <dt>commit <span class="tag git">git</span></dt>
+  <dd>A permanent, timestamped snapshot of the staged files, plus a message saying why. Commits
+  are the unit of history. Each records an <strong>author name and email</strong> baked in at
+  creation, which cannot be edited afterwards without rewriting history.</dd>
+
+  <dt>commit hash <span class="also">SHA</span> <span class="tag git">git</span></dt>
+  <dd>The 40-character fingerprint identifying a commit, e.g. <code>e0c39031f08d&hellip;</code>,
+  usually shortened to the first seven (<code>e0c3903</code>). Two repos holding the same hash
+  hold byte-identical history &mdash; which is how you prove a push worked.</dd>
+</dl>
+
+<h2>The states of a change</h2>
+
+<dl class="gloss">
+  <dt>tracked <span class="tag git">git</span></dt>
+  <dd>A file git has recorded at least once, and is therefore watching for changes. Tracking is
+  per-file and permanent until you deliberately remove it.</dd>
+
+  <dt>untracked <span class="tag git">git</span></dt>
+  <dd>A file git can see but has never recorded. It is never included in a commit and never
+  altered by git. New files start here; <code>git add</code> is what moves them out. In
+  <code>git status --short</code> these are marked <code>??</code>.</dd>
+
+  <dt>modified <span class="tag git">git</span></dt>
+  <dd>A tracked file whose contents on disk no longer match the last commit. Being modified is not
+  enough to get into a commit &mdash; the change still has to be staged.</dd>
+
+  <dt>staged <span class="also">to stage</span> <span class="tag git">git</span></dt>
+  <dd>A change that has been put into the staging area and will be in the next commit. Staging
+  takes a <strong>copy</strong> of the change as it was at that moment: edit the file again and the
+  same file appears as both staged and modified, which is git being accurate rather than
+  broken.</dd>
+
+  <dt>git add <span class="tag git">git</span></dt>
+  <dd>The command that stages changes. Despite taking filenames, it does not operate on files
+  &mdash; it takes whatever <em>differences</em> those files currently hold. Running it on an
+  unchanged file does nothing at all. <code>git add .</code> stages everything in the folder,
+  including things you may not have meant.</dd>
+
+  <dt>git status <span class="tag git">git</span></dt>
+  <dd>The command that reports which of the three states every change is in, under a heading per
+  state. Read the headings, not the filenames. <code>--short</code> gives the compact daily form.</dd>
+
+  <dt>diff <span class="tag git">git</span></dt>
+  <dd>The set of lines added and removed between two versions &mdash; the actual unit git stores.
+  <code>git diff</code> shows changes you have <em>not</em> staged; <code>git diff --staged</code>
+  shows what is in the box, waiting.</dd>
+
+  <dt>commit message <span class="tag git">git</span></dt>
+  <dd>The one-line description sealed into a commit alongside the changes. Written with
+  <code>-m</code>. Nothing checks that it is true of the contents, which is why it can be
+  &mdash; and on a public repo, it is the only part most readers ever see.</dd>
+</dl>
+
+<h2>Where work lives</h2>
+
+<dl class="gloss">
+  <dt>local <span class="tag git">git</span></dt>
+  <dd>On your machine. Your commits are local until you deliberately send them elsewhere.</dd>
+
+  <dt>remote <span class="tag git">git</span></dt>
+  <dd>A nickname for a copy of the repo that lives somewhere else, stored as a URL. A repo can
+  have several. Having a remote configured does <em>not</em> mean anything has been sent to it
+  &mdash; it only records the address.</dd>
+
+  <dt>origin <span class="tag git">git</span></dt>
+  <dd>The conventional name for the primary remote. Not a keyword &mdash; just a habit so
+  universal that tools assume it. <code>origin</code> is to remotes what <code>main</code> is to
+  branches.</dd>
+
+  <dt>branch <span class="tag git">git</span></dt>
+  <dd>A movable label pointing at a commit, marking one line of development. Work on a branch
+  doesn&rsquo;t affect other branches until merged.</dd>
+
+  <dt>main <span class="tag git">git</span></dt>
+  <dd>The conventional name for the default branch &mdash; the authoritative version of the
+  project. Older repos and tutorials call it <code>master</code>.</dd>
+
+  <dt>HEAD <span class="tag git">git</span></dt>
+  <dd>A pointer to where you are right now, normally the newest commit on your current branch.
+  When git says &ldquo;HEAD,&rdquo; read it as &ldquo;the commit you&rsquo;re standing on.&rdquo;</dd>
+</dl>
+
+<h2>Moving work between them</h2>
+
+<dl class="gloss">
+  <dt>push <span class="tag git">git</span></dt>
+  <dd>Send local commits to a remote. This is the step that puts your work on the internet;
+  committing alone never does.</dd>
+
+  <dt>pull <span class="tag git">git</span></dt>
+  <dd>Fetch commits from a remote and merge them into your local branch. The reverse of push.</dd>
+
+  <dt>clone <span class="tag git">git</span></dt>
+  <dd>Download a complete repo &mdash; every commit, not just the current files &mdash; and set up
+  <code>origin</code> pointing back where it came from. How you get an existing project onto a
+  new machine.</dd>
+
+  <dt>tracking branch <span class="also">upstream</span> <span class="tag git">git</span></dt>
+  <dd>A local branch paired with a remote branch, so bare <code>git push</code> and
+  <code>git pull</code> know where to go. Set once with <code>git push -u origin main</code>;
+  the <code>-u</code> is what creates the pairing.</dd>
+</dl>
+
+<h2>Identity and credit</h2>
+
+<dl class="gloss">
+  <dt>author identity <span class="tag git">git</span></dt>
+  <dd>The <code>user.name</code> and <code>user.email</code> stamped into every commit you make.
+  Set once with <code>git config --global</code>. If unset, git invents an address from your
+  computer&rsquo;s hostname &mdash; which belongs to nobody.</dd>
+
+  <dt>attribution <span class="tag hub">github</span></dt>
+  <dd>GitHub matching a commit&rsquo;s author email to a registered account, then showing that
+  account&rsquo;s name and avatar beside the commit. Matching is <strong>by email only</strong>;
+  the name in the commit is ignored. No match, no attribution.</dd>
+
+  <dt>contribution graph <span class="tag hub">github</span></dt>
+  <dd>The grid of green squares on a GitHub profile. A commit only earns a square if its email is
+  connected to the account, it&rsquo;s on the default branch, and the repo isn&rsquo;t a fork.</dd>
+
+  <dt>noreply address <span class="tag hub">github</span></dt>
+  <dd>A GitHub-issued email of the form <code>ID+username@users.noreply.github.com</code> that
+  identifies you for attribution without exposing a real inbox. Safe in public commits. The
+  numeric ID keeps working even if you change your username.</dd>
+
+  <dt>authentication <span class="tag hub">github</span></dt>
+  <dd>Proving to GitHub that you may write to a repo &mdash; separate from identity. Identity is
+  <em>who a commit says wrote it</em>; authentication is <em>who is allowed to push it</em>. A
+  commit can carry your name and still be rejected, and vice versa.</dd>
+
+  <dt>gh <span class="also">GitHub CLI</span> <span class="tag hub">github</span></dt>
+  <dd>GitHub&rsquo;s official terminal program. Handles the website&rsquo;s features &mdash;
+  creating repos, logging in, opening pull requests &mdash; that plain <code>git</code> knows
+  nothing about.</dd>
+</dl>
+
+<h2>On the website</h2>
+
+<dl class="gloss">
+  <dt>README <span class="tag hub">github</span></dt>
+  <dd>A file named <code>README.md</code> at the repo root. GitHub renders it automatically on the
+  repo&rsquo;s front page, making it the first thing any visitor reads.</dd>
+
+  <dt>Markdown <span class="also">.md</span> <span class="tag hub">github</span></dt>
+  <dd>The plain-text formatting syntax READMEs are written in: <code>#</code> for headings,
+  <code>**bold**</code>, <code>-&nbsp;</code> for bullets.</dd>
+
+  <dt>visibility <span class="tag hub">github</span></dt>
+  <dd>Whether a repo is <strong>public</strong> (anyone on the internet can read it) or
+  <strong>private</strong> (only you and people you invite). Changeable later, but anything
+  pushed while public may already have been copied.</dd>
+</dl>
+
+<div class="ask">
+  <p><strong>This is a living document.</strong> Terms get added as lessons introduce them. If you
+  meet a word in a lesson that isn&rsquo;t here, ask me to define it and add it &mdash; a missing
+  entry is a bug in the course, not a gap in you.</p>
+</div>
+
+</main>
+
+<nav class="footer-nav">
+  <a href="../lessons/0001-your-name-on-your-work.html">Lesson 01</a>
+  <a href="../lessons/0002-what-goes-in-the-snapshot.html">Lesson 02</a>
+  <a href="../MISSION.md">Mission</a>
+  <a href="../RESOURCES.md">Resources</a>
+</nav>
+
+</div>
+</body>
+</html>

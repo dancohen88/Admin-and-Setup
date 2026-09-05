@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Name on Your Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="crumb">
+    <span>GitHub</span>
+    <span class="sep">/</span>
+    <span class="num">Lesson 01</span>
+  </div>
+
+  <h1>Your Name on Your Work</h1>
+
+  <p class="standfirst">There is already a repository of yours on GitHub. You didn&rsquo;t put it
+  there, and right now it doesn&rsquo;t have your name on it. By the end of this page it will &mdash;
+  and you&rsquo;ll understand exactly why it didn&rsquo;t.</p>
+
+  <div class="masthead-meta">
+    <span class="chip">12 minutes</span>
+    <span class="chip git">git identity</span>
+    <span class="chip hub">GitHub auth</span>
+  </div>
+</header>
+
+<main>
+
+<h2>The situation</h2>
+
+<p>Your mission is to publish your own projects and have that work be <em>visibly, permanently
+yours</em>. So let&rsquo;s check whether it currently is.</p>
+
+<p>The folder you&rsquo;re sitting in is a git repository with one commit in it, and that commit
+has already been sent to GitHub, at
+<a href="https://github.com/dancohen88/Admin-and-Setup">dancohen88/Admin-and-Setup</a>. A previous
+session did that for you &mdash; which means <strong>you have never actually run the commands
+yourself</strong>. That&rsquo;s what we&rsquo;re fixing.</p>
+
+<p>Here&rsquo;s the problem. Ask GitHub who wrote that commit:</p>
+
+<div class="term" data-copy>
+  <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="c"># Who does GitHub think wrote your one commit?</span>
+<span class="p">$ </span>curl -s https://api.github.com/repos/dancohen88/Admin-and-Setup/commits/e0c3903 \
+    | grep -m1 <span class="s">'"login"'</span> || echo <span class="s">'no GitHub account matched'</span></code></pre>
+</div>
+
+<p>It prints <code>no GitHub account matched</code>. GitHub has the commit, but it cannot tell
+that <em>you</em> made it. On the website that commit shows a grey silhouette instead of your
+avatar, and it earns you no square on your contribution graph.</p>
+
+<p>To see why, ask git what it stamped on the commit:</p>
+
+<div class="term" data-copy>
+  <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git log -1 --format=<span class="s">'%an &lt;%ae&gt;'</span>
+
+<span class="x">Daniel Cohen &lt;danielcohen@Daniels-MacBook-Pro.local&gt;</span></code></pre>
+</div>
+
+<p>That email address does not exist. Nobody can receive mail at it. It is your laptop&rsquo;s
+internal network name, which git invented because you never told it who you are.</p>
+
+<div class="note bad">
+  <span class="label">The exact failure, documented</span>
+  <p>GitHub&rsquo;s troubleshooting page lists the conditions for a commit to count, and names this
+  precise case: contributions must be &ldquo;authored using a valid email address&rdquo; &mdash;
+  explicitly <em>not</em> generic addresses like <code>jane@computer.local</code>.</p>
+  <p>Yours is <code>danielcohen@Daniels-MacBook-Pro.local</code>. Same shape, same result.</p>
+</div>
+<p class="src"><a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-profile/managing-contribution-settings-on-your-profile/why-are-my-contributions-not-showing-up-on-my-profile">GitHub Docs &mdash; Why are my contributions not showing up on my profile?</a></p>
+
+<h2>The one idea</h2>
+
+<p>Almost every beginner confusion with GitHub dissolves once you separate two things that feel
+like one thing.</p>
+
+<div class="compare">
+  <div class="col git">
+    <h4>Identity</h4>
+    <p class="gloss">git &middot; on your Mac</p>
+    <ul>
+      <li>Who a commit <strong>says</strong> wrote it</li>
+      <li>Stamped in by git, offline</li>
+      <li>Set with <code>git config user.email</code></li>
+      <li><strong>Permanent</strong> once the commit exists</li>
+    </ul>
+  </div>
+  <div class="col hub">
+    <h4>Authentication</h4>
+    <p class="gloss">GitHub &middot; over the network</p>
+    <ul>
+      <li>Who is <strong>allowed</strong> to upload it</li>
+      <li>Checked by GitHub, at push time</li>
+      <li>Set with <code>gh auth login</code></li>
+      <li><strong>Changeable</strong> any time</li>
+    </ul>
+  </div>
+</div>
+
+<p>Your repo has neither configured. It reached GitHub anyway because a previous session supplied
+its own credentials &mdash; but the <em>identity</em> stamped on the commit was never yours to
+begin with.</p>
+
+<div class="note">
+  <span class="label">Why this matters later</span>
+  <p>The two systems never consult each other. That&rsquo;s why a commit can carry your name and
+  still be rejected on push, and why a commit you did push can still show up as someone else.</p>
+</div>
+
+<p>And here is the part you can&rsquo;t undo later. <em>Pro Git</em> &mdash; the canonical git book,
+written by a GitHub co-founder &mdash; puts it plainly:</p>
+
+<div class="note quote">
+  <span class="label">Pro Git &sect;1.6 &mdash; First-Time Git Setup</span>
+  <p>Your identity is important because &ldquo;every Git commit uses this information, and
+  it&rsquo;s <strong>immutably baked into the commits</strong> you start creating.&rdquo;</p>
+</div>
+<p class="src"><a href="https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup">Pro Git, 2nd ed. &mdash; Getting Started: First-Time Git Setup</a></p>
+
+<p><strong>Immutably baked.</strong> Commit <code>e0c3903</code> will carry that dead address for
+as long as the repo exists. We are not going to fix it &mdash; rewriting history is a later,
+sharper tool, and it isn&rsquo;t worth it for one commit. We&rsquo;ll set your identity correctly
+and leave that commit as a fossil of what happens when you don&rsquo;t.</p>
+
+<div class="quiz" data-quiz>
+  <p class="q-stem">GitHub decides whose avatar to show beside a commit. What does it match on?</p>
+  <button class="q-opt" data-correct>The email in the commit</button>
+  <button class="q-opt">The name in the commit</button>
+  <button class="q-opt">The account that pushed</button>
+  <button class="q-opt">The owner of the repo</button>
+  <div class="q-why">
+    <p>Email, and only email. The author <em>name</em> is free text GitHub never checks &mdash; you
+    could commit as &ldquo;Ada Lovelace&rdquo; and it wouldn&rsquo;t blink. The account that pushed
+    is a separate question entirely: that&rsquo;s authentication, not identity. Your one commit
+    already proves it, since it was pushed successfully but attributed to nobody.</p>
+  </div>
+  <button class="q-retry">try again</button>
+</div>
+
+<h2>Do it</h2>
+
+<ol class="steps">
+
+  <li>
+    <h3>Tell git who you are</h3>
+    <p>Your name is free text &mdash; use whatever you want shown. Your email is the part that has
+    to be exact.</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git config --global user.name <span class="s">"Daniel Cohen"</span>
+<span class="p">$ </span>git config --global user.email <span class="s">"321021787+dancohen88@users.noreply.github.com"</span></code></pre>
+    </div>
+    <p><code>--global</code> means &ldquo;for every repo on this Mac,&rdquo; so this is a
+    once-per-machine job, not once-per-project.</p>
+
+    <p>That second address isn&rsquo;t one I invented &mdash; GitHub issued it to you. It&rsquo;s
+    your account&rsquo;s <strong>noreply address</strong>, in the documented form
+    <code>ID+username@users.noreply.github.com</code>, where <code>321021787</code> is your
+    account&rsquo;s permanent numeric ID.</p>
+
+    <p>Using it rather than your real inbox buys two things: your actual email never appears in a
+    public commit where scrapers can harvest it, and because the ID never changes, attribution
+    survives even if you rename your account later &mdash; which the older username-only form
+    does not.</p>
+    <p class="src"><a href="https://docs.github.com/en/account-and-profile/reference/email-addresses-reference">GitHub Docs &mdash; Email addresses reference</a></p>
+  </li>
+
+  <li>
+    <h3>Prove it took</h3>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git config --global --get user.name
+<span class="p">$ </span>git config --global --get user.email</code></pre>
+    </div>
+    <p>Each should echo back what you just set. If either prints nothing, the command
+    didn&rsquo;t land &mdash; check for a typo and run it again.</p>
+  </li>
+
+  <li>
+    <h3>Log in to GitHub</h3>
+    <p>Now the other half: authentication. <code>gh</code> is already installed on your Mac but has
+    never been logged in.</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>gh auth login</code></pre>
+    </div>
+    <p>Answer the prompts: <strong>GitHub.com</strong> &rarr; <strong>HTTPS</strong> &rarr;
+    <strong>Yes</strong> (authenticate git with your GitHub credentials) &rarr;
+    <strong>Login with a web browser</strong>. It shows an eight-character code, opens your
+    browser, you paste the code, done.</p>
+    <p>Saying yes to &ldquo;authenticate git&rdquo; is what lets plain <code>git push</code> work
+    afterwards without asking for a password every time. Confirm it worked:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>gh auth status
+
+<span class="o">&#10003; Logged in to github.com account dancohen88</span></code></pre>
+    </div>
+  </li>
+
+  <li>
+    <h3>Make a commit that&rsquo;s actually yours</h3>
+    <p>We need something real to commit, and there&rsquo;s a genuine error sitting in your repo:
+    <code>README.md</code> claims the project is &ldquo;ready to be published to GitHub.&rdquo; It
+    was published hours ago. Let&rsquo;s make it true.</p>
+
+    <p>Open <code>README.md</code> and replace its contents:</p>
+<pre class="plain" data-copy><code># Admin and Setup
+
+My workspace for learning Git and GitHub.
+
+Published at https://github.com/dancohen88/Admin-and-Setup</code></pre>
+
+    <p>Then run the three commands that turn an edit into published work:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git add README.md
+<span class="p">$ </span>git commit -m <span class="s">"Update README to reflect published state"</span>
+<span class="p">$ </span>git push</code></pre>
+    </div>
+
+    <p><code>add</code> chooses what goes in. <code>commit</code> takes the snapshot, locally.
+    <code>push</code> sends it to GitHub. Three separate acts &mdash; the subject of lesson 02.</p>
+
+    <p>The <code>commit</code> step is where your new identity gets stamped on. The
+    <code>push</code> step is where your new login gets used. This one sequence exercises both
+    halves of the split above.</p>
+  </li>
+
+  <li>
+    <h3>Collect the win</h3>
+    <p>Ask GitHub the same question we opened with, this time about your new commit:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>gh api repos/dancohen88/Admin-and-Setup/commits/$(git rev-parse HEAD) \
+    --jq <span class="s">'.author.login'</span>
+
+<span class="o">dancohen88</span></code></pre>
+    </div>
+    <p>Where the first commit returned nothing, this one returns you. Now look at it:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>gh repo view --web</code></pre>
+    </div>
+    <p>Your browser opens the repo. Your new README is on the front page, and beside your commit
+    is your username and your avatar. The commit above it still shows a grey silhouette &mdash;
+    the fossil, exactly as predicted.</p>
+  </li>
+
+</ol>
+
+<div class="note good">
+  <span class="label">What you just did</span>
+  <p>You configured a permanent machine-wide git identity, authenticated a real GitHub session,
+  and ran the full <code>add &rarr; commit &rarr; push</code> loop under your own name. Every
+  commit you make on this Mac from now on &mdash; in this repo or any other &mdash; will be
+  correctly attributed to you, without you thinking about it again.</p>
+</div>
+
+<div class="quiz" data-quiz>
+  <p class="q-stem">You edit a file and run <code>git commit</code>. Where does that change exist?</p>
+  <button class="q-opt" data-correct>Only on your own machine</button>
+  <button class="q-opt">On GitHub and your machine</button>
+  <button class="q-opt">Only on the GitHub servers</button>
+  <button class="q-opt">Nowhere until you reload</button>
+  <div class="q-why">
+    <p>Committing is a purely local act &mdash; git works with your Wi-Fi off. Nothing reaches
+    GitHub until <code>git push</code>. This is the distinction that catches nearly every
+    beginner: they commit carefully all week, never push, and lose it all with the laptop.
+    <strong>A commit is a save. A push is a backup.</strong></p>
+  </div>
+  <button class="q-retry">try again</button>
+</div>
+
+<div class="reading">
+  <span class="label">Read this next &mdash; 5 minutes</span>
+  <span class="title"><a href="https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup">Pro Git &sect;1.6 &mdash; First-Time Git Setup</a></span>
+  <p>The source this lesson leans on hardest. Free, complete, and written by Scott Chacon, a
+  GitHub co-founder &mdash; the highest-trust git text there is. Read just &sect;1.6 for now: it
+  covers the identity settings you configured, plus the editor and default-branch settings
+  you&rsquo;ll want soon.</p>
+</div>
+
+<h2>Where this goes</h2>
+
+<p>You now have a correctly-identified machine and a working login &mdash; the setup you only do
+once. Lesson 02 takes the <code>add &rarr; commit &rarr; push</code> sequence you just ran by
+rote and makes it something you actually understand, including why git insists on that middle
+step at all.</p>
+
+<p>Left unresolved, deliberately: <code>e0c3903</code> is still unattributed. There&rsquo;s a tool
+that can rewrite it. It&rsquo;s dangerous enough to be worth earning first.</p>
+
+<div class="ask">
+  <p><strong>Ask me anything about this.</strong> I&rsquo;m your teacher for this course, not just
+  the person who wrote the page. If a step failed, if <code>gh auth login</code> asked something
+  this lesson didn&rsquo;t cover, if a word here meant nothing to you, or if you want to know
+  <em>why</em> git works this way &mdash; ask. A confusing lesson is my bug to fix.</p>
+  <p>Two worth asking now: <em>&ldquo;What actually is the staging area for?&rdquo;</em> and
+  <em>&ldquo;What happens if I push from a second computer?&rdquo;</em></p>
+</div>
+
+</main>
+
+<nav class="footer-nav">
+  <a href="0002-what-goes-in-the-snapshot.html">Lesson 02 &rarr;</a>
+  <a href="../reference/0001-glossary.html">Glossary</a>
+  <a href="../MISSION.md">Mission</a>
+  <a href="../RESOURCES.md">Resources</a>
+  <a href="https://github.com/dancohen88/Admin-and-Setup">Your repo &#8599;</a>
+</nav>
+
+</div>
+
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/copy-button.js" defer></script>
+</body>
+</html>
