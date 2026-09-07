@@ -53,6 +53,16 @@
   <dd>A website that stores copies of git repositories and adds a social layer &mdash; profiles,
   issues, pull requests. One of several such sites; GitLab and Codeberg are others.
   <strong>git is the tool, GitHub is a place to put the results.</strong></dd>
+
+  <dt>pager <span class="also">less</span></dt>
+  <dd>Deliberately untagged: a pager belongs to <em>neither</em> system. It is a separate
+  program &mdash; usually one called <code>less</code> &mdash; that your terminal hands long
+  output to so you can scroll it. git passes anything taller than your window to it, which is
+  why a finished <code>git log</code> can look like a frozen terminal: the pager has taken the
+  keyboard and is waiting. <code>(END)</code> means you have reached the bottom.
+  <strong>Press <code>q</code> to get out.</strong> <code>space</code> pages down,
+  <code>b</code> pages back, <code>/word</code> searches. To stop git using one at all:
+  <code>git config --global core.pager cat</code>.</dd>
 </dl>
 
 <h2>Things that hold your work</h2>
@@ -62,6 +72,12 @@
   <dd>A folder git is tracking, plus the hidden <code>.git</code> subfolder holding its entire
   history. Delete <code>.git</code> and you have an ordinary folder again, with every version
   but the current one gone.</dd>
+
+  <dt>git init <span class="tag git">git</span></dt>
+  <dd>The command that turns an ordinary folder into a repository, by creating the
+  <code>.git</code> subfolder with an empty history in it. It touches none of your existing
+  files and tracks none of them &mdash; a freshly initialised folder of finished work is still,
+  correctly, an <em>empty repository</em>. Run once per project, ever.</dd>
 
   <dt>working directory <span class="also">working tree</span> <span class="tag git">git</span></dt>
   <dd>The files as they exist right now, the ones you can open and edit. The only part of a repo
@@ -150,6 +166,12 @@
   <dd>The conventional name for the default branch &mdash; the authoritative version of the
   project. Older repos and tutorials call it <code>master</code>.</dd>
 
+  <dt>init.defaultBranch <span class="tag git">git</span></dt>
+  <dd>The setting that decides what <code>git init</code> names your first branch. Unset, git
+  still picks <code>master</code> and prints a hint about it every time. Set it once with
+  <code>git config --global init.defaultBranch main</code> to match GitHub and everything
+  else.</dd>
+
   <dt>HEAD <span class="tag git">git</span></dt>
   <dd>A pointer to where you are right now, normally the newest commit on your current branch.
   When git says &ldquo;HEAD,&rdquo; read it as &ldquo;the commit you&rsquo;re standing on.&rdquo;</dd>
@@ -169,6 +191,12 @@
   <dd>Download a complete repo &mdash; every commit, not just the current files &mdash; and set up
   <code>origin</code> pointing back where it came from. How you get an existing project onto a
   new machine.</dd>
+
+  <dt>gh repo create <span class="tag hub">github</span></dt>
+  <dd>Creates the repository on GitHub. With <code>--source=.</code> it builds it from a local
+  repo you already have, adds <code>origin</code>, and with <code>--push</code> sends your
+  commits and sets up the tracking branch in one go. Requires <code>--public</code> or
+  <code>--private</code> explicitly &mdash; there is deliberately no default.</dd>
 
   <dt>tracking branch <span class="also">upstream</span> <span class="tag git">git</span></dt>
   <dd>A local branch paired with a remote branch, so bare <code>git push</code> and
@@ -237,6 +265,7 @@
 <nav class="footer-nav">
   <a href="../lessons/0001-your-name-on-your-work.html">Lesson 01</a>
   <a href="../lessons/0002-what-goes-in-the-snapshot.html">Lesson 02</a>
+  <a href="../lessons/0003-from-folder-to-repository.html">Lesson 03</a>
   <a href="../MISSION.md">Mission</a>
   <a href="../RESOURCES.md">Resources</a>
 </nav>

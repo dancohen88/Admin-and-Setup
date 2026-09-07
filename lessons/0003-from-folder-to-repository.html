@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From Folder to Repository</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <div class="crumb">
+    <span>GitHub</span>
+    <span class="sep">/</span>
+    <span class="num">Lesson 03</span>
+  </div>
+
+  <h1>From Folder to Repository</h1>
+
+  <p class="standfirst">There is a finished game on your laptop called Mosslight Hollow. Nobody
+  can see it, nothing is backing it up, and it has never been anywhere near git. By the end of
+  this page it will have a URL.</p>
+
+  <div class="masthead-meta">
+    <span class="chip">14 minutes</span>
+    <span class="chip git">git init</span>
+    <span class="chip hub">gh repo create</span>
+  </div>
+</header>
+
+<main>
+
+<h2>The situation</h2>
+
+<p>Your mission opens with a complaint about your own hard drive: work sits in local folders that
+nobody else can see and no backup protects. That is still true. Here is the evidence:</p>
+
+<div class="term" data-copy>
+  <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>ls ~/Sandbox
+
+<span class="c">0x72_DungeonTilesetII_v1.7</span>
+<span class="o">Admin and Setup</span>
+<span class="c">Archer.png</span>
+<span class="x">Cosy Crawler 2</span>
+<span class="x">Cosy Dungeon Crawler</span>
+<span class="c">Warrior.png
+Wizard.png</span>
+<span class="o">family</span>
+<span class="x">family-planner</span></code></pre>
+</div>
+
+<p>Two of those are on GitHub &mdash; <code>Admin and Setup</code> and <code>family</code>.
+The three project folders that aren&rsquo;t (<code>Cosy Crawler 2</code>, <code>Cosy Dungeon
+Crawler</code>, <code>family-planner</code>) are one spilled coffee from never having existed.
+We&rsquo;re going to fix the best of them.</p>
+
+<p><code>Cosy Dungeon Crawler</code> is 27 files and 244&nbsp;KB &mdash; a complete top-down
+dungeon crawler in vanilla JavaScript, with tests, a plan, and a style guide. It has zero
+installed dependencies. And it is not a git repository:</p>
+
+<div class="term" data-copy>
+  <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>ls -a ~/Sandbox/<span class="s">"Cosy Dungeon Crawler"</span>
+
+<span class="x">.          PLAN.md     package.json  styles.css
+..         STYLE.md    public        test
+CLAUDE.md  index.html  server.js</span></code></pre>
+</div>
+
+<p>No <code>.git</code> in that list. No history, no commits, no remote &mdash; nothing to push
+even if you wanted to. This is genuinely new ground: <strong>every repository you have touched so
+far already existed before you got there.</strong> This one you make.</p>
+
+<h2>The one idea</h2>
+
+<p>Publishing a folder that already exists is not one act. It is two separate creations, in a
+specific order, and then a single link between them.</p>
+
+<div class="compare">
+  <div class="col git">
+    <h4>1. The local repo</h4>
+    <p class="gloss">git init &middot; on your Mac</p>
+    <ul>
+      <li>Creates the <code>.git</code> folder</li>
+      <li>Instant, offline, free</li>
+      <li>Tracks nothing yet</li>
+      <li>Where you commit</li>
+    </ul>
+  </div>
+  <div class="col hub">
+    <h4>2. The GitHub repo</h4>
+    <p class="gloss">gh repo create &middot; on the web</p>
+    <ul>
+      <li>Creates the page and URL</li>
+      <li>Needs the network</li>
+      <li>Public or private, your call</li>
+      <li>Where you push</li>
+    </ul>
+  </div>
+</div>
+
+<p><strong>Order matters.</strong> Make the local repo first and commit into it, then create the
+GitHub one <em>from</em> it. That way GitHub&rsquo;s copy is a copy of something real, and the
+connection between the two gets set up for you in the same breath.</p>
+
+<p>Do it the other way round &mdash; empty repo on the website first, then try to marry it to a
+folder afterwards &mdash; and you spend your afternoon reading Stack Overflow answers about
+unrelated histories. That route exists and has its uses. It is not the one for today.</p>
+
+<div class="note">
+  <span class="label">What <code>git init</code> actually does</span>
+  <p>It makes one hidden folder, <code>.git</code>, and puts an empty history in it. That is all.
+  Your 27 files are not touched, not copied, and not tracked &mdash; they are sitting in exactly
+  the <code>??</code> state you met in lesson 02.</p>
+  <p>Which is why git will call your full, finished game an <em>empty repository</em> and be
+  completely correct.</p>
+</div>
+
+<div class="quiz" data-quiz>
+  <p class="q-stem">You run <code>git init</code> in a folder holding 27 files. What is now tracked?</p>
+  <button class="q-opt" data-correct>Nothing at all, until added</button>
+  <button class="q-opt">Every file in the folder</button>
+  <button class="q-opt">Only files git can read</button>
+  <button class="q-opt">All except the hidden ones</button>
+  <div class="q-why">
+    <p><code>init</code> creates the repository; it does not fill it. Every one of those 27 files
+    is untracked until you <code>git add</code> it &mdash; the same first heading
+    <code>git status</code> showed you last lesson. Making a repo and putting something in it are
+    two different jobs.</p>
+  </div>
+  <button class="q-retry">try again</button>
+</div>
+
+<h2>Do it</h2>
+
+<ol class="steps">
+
+  <li>
+    <h3>Fix the default branch name, once</h3>
+    <p>Before you init anything. Left alone, git 2.50 still names the first branch
+    <code>master</code> and prints a paragraph of apology about it every single time:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git config --global init.defaultBranch main</code></pre>
+    </div>
+    <p>GitHub uses <code>main</code>. Your other repo uses <code>main</code>. Every current
+    tutorial uses <code>main</code>. This is a once-per-machine setting like your identity in
+    lesson 01 &mdash; set it and never think about it again.</p>
+  </li>
+
+  <li>
+    <h3>Turn the folder into a repository</h3>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>cd ~/Sandbox/<span class="s">"Cosy Dungeon Crawler"</span>
+<span class="p">$ </span>git init
+
+<span class="o">Initialized empty Git repository in
+/Users/danielcohen/Sandbox/Cosy Dungeon Crawler/.git/</span></code></pre>
+    </div>
+    <p>The quotes around the folder name matter &mdash; without them the shell reads
+    <code>Cosy</code>, <code>Dungeon</code> and <code>Crawler</code> as three separate arguments.
+    Typing <code>cd ~/Sandbox/Cosy</code> and hitting <kbd>Tab</kbd> lets the shell do the
+    quoting for you.</p>
+    <p>&ldquo;Empty,&rdquo; it says, standing in a folder with a whole game in it. Look:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git status --short
+
+<span class="x">?? CLAUDE.md
+?? PLAN.md
+?? STYLE.md
+?? index.html
+?? package.json
+?? public/
+?? server.js
+?? styles.css
+?? test/</span></code></pre>
+    </div>
+    <p>Nine lines of <code>??</code>, folders collapsed, exactly as last lesson taught you to read
+    it. The repo exists and holds nothing.</p>
+  </li>
+
+  <li>
+    <h3>Give it a front page</h3>
+    <p>There is no <code>README.md</code> in that list, and GitHub renders <code>README.md</code>
+    as a repo&rsquo;s front page. Without one, the first thing a visitor sees is a bare file
+    listing.</p>
+    <p>Your <code>package.json</code> already describes the project better than the folder name
+    does &mdash; it calls it <strong>mosslight-hollow</strong>, &ldquo;a cozy top-down lo-fi
+    dungeon crawler, built with vanilla HTML/CSS/JS Canvas.&rdquo; Use its own words. Create
+    <code>README.md</code>:</p>
+<pre class="plain" data-copy><code># Mosslight Hollow
+
+A cozy top-down lo-fi dungeon crawler, built with vanilla HTML/CSS/JS Canvas.
+No dependencies — Node 18+ is the only requirement.
+
+## Running it
+
+    npm start
+
+Then open http://localhost:3000
+</code></pre>
+    <p>That is a placeholder, not a good README &mdash; lesson 06 is about writing one that
+    actually earns a stranger&rsquo;s attention. It beats an empty front page today.</p>
+  </li>
+
+  <li>
+    <h3>Make the first commit</h3>
+    <p>Lesson 02 told you to be wary of <code>git add .</code> Here it is the right call, and the
+    wariness is what makes it so: you have already run <code>git status --short</code> and seen
+    all nine entries. There is no <code>node_modules</code> to sweep up, because this project
+    installs nothing. Everything in the folder genuinely belongs in the repo.</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>git add .
+<span class="p">$ </span>git status --short
+<span class="p">$ </span>git commit -m <span class="s">"Initial commit: Mosslight Hollow, a cozy dungeon crawler"</span></code></pre>
+    </div>
+    <p>Check the middle command before you run the third &mdash; every line should have flipped
+    from <code>??</code> to <code>A</code>, and <code>README.md</code> should now be among
+    them.</p>
+  </li>
+
+  <li>
+    <h3>Choose the name, then create it on GitHub</h3>
+    <p>This is the one irreversible-ish decision on the page, so take it deliberately. The
+    repository name becomes a URL: <code>github.com/dancohen88/&lt;name&gt;</code>. Renaming later
+    works, but every link anyone has saved breaks.</p>
+    <p><code>gh</code> defaults to the folder name, which would give you
+    <code>Cosy-Dungeon-Crawler</code> &mdash; spaces silently turned into dashes. Your project
+    calls itself something better:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>gh repo create mosslight-hollow --source=. --public --push \
+    --description <span class="s">"A cozy top-down lo-fi dungeon crawler in vanilla JS"</span>
+
+<span class="o">&#10003; Created repository dancohen88/mosslight-hollow on GitHub
+&#10003; Added remote https://github.com/dancohen88/mosslight-hollow.git
+&#10003; Pushed commits to https://github.com/dancohen88/mosslight-hollow.git</span></code></pre>
+    </div>
+    <p>Four flags, each doing one thing:</p>
+    <div class="scroll-x">
+    <table>
+      <tr><th>Flag</th><th>What it does</th></tr>
+      <tr><td><code>--source=.</code></td><td>Build the repo from <em>this</em> folder. Without it you get an empty repo unconnected to anything.</td></tr>
+      <tr><td><code>--public</code></td><td>Anyone can read it. One of <code>--public</code> or <code>--private</code> is required &mdash; there is no default, on purpose.</td></tr>
+      <tr><td><code>--push</code></td><td>Send the commits now, and wire up <code>origin</code> so plain <code>git push</code> works from here on.</td></tr>
+      <tr><td><code>--description</code></td><td>The one-line blurb under the repo name. Optional, and the difference between a project and a folder.</td></tr>
+    </table>
+    </div>
+    <p>Public is right for this one: it is a game, it holds no secrets, and public repos are what
+    show up on your profile. When you are unsure, use <code>--private</code> &mdash; lesson 07
+    covers switching, and switching <em>to</em> private after the fact is the switch that
+    doesn&rsquo;t fully work.</p>
+    <p class="src"><a href="https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github">GitHub Docs &mdash; Adding locally hosted code to GitHub</a></p>
+  </li>
+
+  <li>
+    <h3>Confirm all three parts landed</h3>
+    <p>Three things had to happen. Check each rather than trusting the ticks:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="c"># is there a remote, and does it point at the right place?</span>
+<span class="p">$ </span>git remote -v
+
+<span class="c"># is the local branch paired with GitHub's, and in sync?</span>
+<span class="p">$ </span>git status -sb
+
+<span class="o">## main...origin/main</span></code></pre>
+    </div>
+    <p>No <code>ahead</code> and no <code>behind</code> on that last line means both copies hold
+    identical history. Then look at the thing itself:</p>
+    <div class="term" data-copy>
+      <div class="term-bar"><span class="dot"></span><span class="label">zsh</span></div>
+<pre><code><span class="p">$ </span>gh repo view --web</code></pre>
+    </div>
+    <p>Your README on the front page, your description under the title, your avatar beside the
+    commit &mdash; that last part courtesy of the identity you set in lesson 01, working
+    automatically in a repository that did not exist when you set it.</p>
+  </li>
+
+</ol>
+
+<div class="note good">
+  <span class="label">What you just did</span>
+  <p>You published a project from scratch: <code>init</code>, a first commit, a named repo, and a
+  push, in about five commands. That is the first line of your mission&rsquo;s success list, and
+  you can now do it to anything on your laptop.</p>
+</div>
+
+<div class="note warn">
+  <span class="label">The trap waiting for you</span>
+  <p><code>git add .</code> was safe here because Mosslight Hollow installs nothing. The day you
+  run <code>npm install</code> on a project with real dependencies, a <code>node_modules</code>
+  folder appears containing tens of thousands of files, and <code>git add .</code> will take
+  every one of them.</p>
+  <p>The fix is a <code>.gitignore</code>, and it is lesson 05. Until then, run
+  <code>git status --short</code> before you add, and notice if the list suddenly gets long.</p>
+</div>
+
+<div class="quiz" data-quiz>
+  <p class="q-stem"><code>gh</code> reported &ldquo;Added remote&rdquo;. What is a remote?</p>
+  <button class="q-opt" data-correct>A stored address for elsewhere</button>
+  <button class="q-opt">A copy of your local commits</button>
+  <button class="q-opt">A backup that runs automatically</button>
+  <button class="q-opt">The branch GitHub reads from</button>
+  <div class="q-why">
+    <p>A nickname and a URL, nothing more: <code>origin</code> now means
+    <code>https://github.com/dancohen88/mosslight-hollow.git</code>. Having a remote moves no
+    data whatsoever &mdash; <code>--push</code> is what sent your commit. This matters more than
+    it sounds: <strong>git never syncs behind your back.</strong> A repo can have a perfectly
+    good remote and be months out of date, which is exactly how people lose work they thought
+    was backed up.</p>
+  </div>
+  <button class="q-retry">try again</button>
+</div>
+
+<div class="reading">
+  <span class="label">Read this next &mdash; 5 minutes</span>
+  <span class="title"><a href="https://git-scm.com/book/en/v2/Git-Basics-Getting-a-Git-Repository">Pro Git &sect;2.1 &mdash; Getting a Git Repository</a></span>
+  <p>Short, and covers exactly what you just did: turning an existing directory into a repo, and
+  the other route in (<code>git clone</code>) for when the project already lives somewhere else.
+  Read both halves &mdash; you will need <code>clone</code> the first time you sit down at a
+  different computer.</p>
+</div>
+
+<h2>Where this goes</h2>
+
+<p>Two more are still sitting there. <code>family-planner</code> is already a git repo with a
+<code>.gitignore</code> and commits in it &mdash; so publishing it is only steps 5 and 6 of this
+page, and it is worth doing on your own to prove the sequence stuck. <code>Cosy Crawler 2</code>
+is stranger: a <code>.git</code> folder with nothing beside it. Ask me about that one.</p>
+
+<p>Lesson 04 is undoing. You can now put work on the internet quickly, which means you can now
+put a mistake on the internet quickly &mdash; a wrong file, a bad edit, a commit you regret. The
+next lesson is how to walk each of those back, and which of them can&rsquo;t be.</p>
+
+<div class="ask">
+  <p><strong>Ask me anything about this.</strong> If <code>gh repo create</code> refused, if the
+  name was taken, if the push asked for a password, if you picked a different name and want to
+  change it &mdash; say so. Renaming a repo you published ten minutes ago is easy; the whole
+  point of doing it now is that nothing has linked to it yet.</p>
+  <p>Two worth asking: <em>&ldquo;What actually is in the <code>.git</code> folder?&rdquo;</em>
+  and <em>&ldquo;How do I get this onto a second computer?&rdquo;</em></p>
+</div>
+
+</main>
+
+<nav class="footer-nav">
+  <a href="0002-what-goes-in-the-snapshot.html">&larr; Lesson 02</a>
+  <a href="../reference/0001-glossary.html">Glossary</a>
+  <a href="../MISSION.md">Mission</a>
+  <a href="https://github.com/dancohen88?tab=repositories">Your repos &#8599;</a>
+</nav>
+
+</div>
+
+<script src="../assets/quiz.js" defer></script>
+<script src="../assets/copy-button.js" defer></script>
+</body>
+</html>

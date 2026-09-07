@@ -42,6 +42,7 @@ were rebuilt and republished. Any future tag-stripping regex needs the same guar
 |---|---|
 | Lesson 01 — Your Name on Your Work | https://claude.ai/code/artifact/f40efd85-ad06-4d42-a7f2-f54eb0bf038f |
 | Lesson 02 — What Goes in the Snapshot | https://claude.ai/code/artifact/f6a32d9c-2db4-42b3-917a-b065af97c523 |
+| Lesson 03 — From Folder to Repository | https://claude.ai/code/artifact/be3141fd-cd53-447a-a3fe-6aae2c17602d |
 | Reference 01 — Git & GitHub Glossary | https://claude.ai/code/artifact/7a469085-d1f4-49d2-84bd-5fedc0d9bc01 |
 
 ## Environment (verified 2026-08-30)
@@ -75,11 +76,52 @@ lesson 01 promised it and learning record 0003 showed the misconception was live
 a new project moves to 0003 — it needs the commit loop understood first.
 
 - ~~0002: `gh repo create`~~ → written as **What Goes in the Snapshot** (the staging area)
-- 0003: `gh repo create` — publishing a brand-new project from an empty folder
+- ~~0003~~ → written as **From Folder to Repository** (`git init` + `gh repo create`)
 - 0004: undoing things — `restore`, `revert` (avoid `reset --hard` early)
 - 0005: `.gitignore` — keeping secrets and junk out of a public repo
 - 0006: READMEs that explain a project to a stranger
 - 0007: private vs public, and switching between them
 
 Lesson 02 leaves two questions deliberately dangling for 0004, seeded in its ask box: taking
-something back out of the staging area, and regretting a commit message.
+something back out of the staging area, and regretting a commit message. Lesson 03 adds a third
+hook for 0004 in its closing section — publishing fast means publishing mistakes fast.
+
+## Lesson 03 subject matter (chosen 2026-09-05)
+
+Used his real unpublished work rather than an invented empty folder, because the mission's first
+success criterion is publishing *a project*, and he had three sitting there.
+
+- **`~/Sandbox/Cosy Dungeon Crawler`** — the subject. 27 files, 244 KB, no `.git`, **zero
+  installed dependencies**, no `.env`, no `.DS_Store`, no files over 1 MB. Verified clean before
+  writing the lesson; that is what makes `git add .` defensible on this one project.
+- `package.json` calls it **`mosslight-hollow`** — "A cozy top-down lo-fi dungeon crawler, built
+  with vanilla HTML/CSS/JS Canvas." The lesson uses that as the repo name over the folder name,
+  and as the source of the stub README's wording.
+- It has **no README**. Lesson 03 adds a placeholder and explicitly defers real README work to 0006.
+
+**Left for him to do alone:** `family-planner` is already a repo with a `.gitignore` and commits,
+so publishing it is only steps 5–6 of lesson 03. Good unaided practice, named as such in the lesson.
+
+**Unexplained, flagged to him as a question:** `~/Sandbox/Cosy Crawler 2` is a 17 MB `.git`
+directory with **no working-tree files at all**. Don't guess at it in a lesson — investigate when
+he asks.
+
+**Environment fact:** `init.defaultBranch` was unset as of 2026-09-05, so `git init` would have
+produced `master` plus a hint paragraph. Lesson 03 step 1 sets it to `main`.
+
+## Next mission after this one (decided 2026-09-05)
+
+**Terminal basics.** Chosen by Daniel over the alternative recommendation, GitHub Pages
+(deploying `mosslight-hollow` to a playable URL rather than leaving it as source). Pages is
+not rejected, just deferred — it remains the obvious follow-on once the shell is comfortable.
+
+Rationale for terminal basics: he is already tripping over shell concepts sideways inside git
+lessons rather than meeting them head on — the `(END)` pager incident in
+[[learning-records/0004-staging-area-confirmed]] is the clearest case. It is the substrate under
+everything else, and it is small. Likely ground: paths and `cd`, what a pager is and how to leave
+one, pipes and redirection, quoting (his own directory names contain spaces), and reading a
+command's own help.
+
+**Ordering: finish this mission first.** Lessons 04–07 (undoing, `.gitignore`, READMEs, visibility)
+are still unwritten and three MISSION.md success criteria are still unmet. Undoing is the priority
+of those four — he can currently publish confidently but not recover confidently.
