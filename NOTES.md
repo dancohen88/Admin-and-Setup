@@ -76,8 +76,12 @@ lesson 01 promised it and learning record 0003 showed the misconception was live
 a new project moves to 0003 — it needs the commit loop understood first.
 
 - ~~0002: `gh repo create`~~ → written as **What Goes in the Snapshot** (the staging area)
-- ~~0003~~ → written as **From Folder to Repository** (`git init` + `gh repo create`)
-- 0004: undoing things — `restore`, `revert` (avoid `reset --hard` early)
+- ~~0003~~ → **From Folder to Repository** — taught and confirmed 2026-09-07, see
+  [[learning-records/0005-first-unaided-publish]]. `dancohen88/mosslight-hollow` is public.
+- 0004: undoing things — **next, and now partly pre-taught.** He used `git commit --amend` for
+  real on 2026-09-07 to fix an unpushed bad message. Open from that, don't re-derive it, and
+  spend the lesson on what amend *can't* touch: `restore`, `revert`, and already-pushed history.
+  (Avoid `reset --hard` early.) `family-planner` / `Cosy Crawler 2` are the follow-on cleanup.
 - 0005: `.gitignore` — keeping secrets and junk out of a public repo
 - 0006: READMEs that explain a project to a stranger
 - 0007: private vs public, and switching between them
@@ -99,12 +103,17 @@ success criterion is publishing *a project*, and he had three sitting there.
   and as the source of the stub README's wording.
 - It has **no README**. Lesson 03 adds a placeholder and explicitly defers real README work to 0006.
 
-**Left for him to do alone:** `family-planner` is already a repo with a `.gitignore` and commits,
-so publishing it is only steps 5–6 of lesson 03. Good unaided practice, named as such in the lesson.
+**Corrected 2026-09-07 — `family-planner` is NOT unaided practice.** The original note here said
+publishing it was "only steps 5–6." Wrong: it already has an `origin` (`dancohen88/family`), and
+local `main` (`d1957ae`) diverged from remote (`e4a97bc`) on 2026-08-26 — before this course
+began, via prior agent sessions. Sending a beginner into that is sending him into a divergence he
+has no tools for. Lesson 03's closing paragraph was rewritten and republished to say so; the
+unaided rep is now "run the whole sequence on the next new thing you start."
 
-**Unexplained, flagged to him as a question:** `~/Sandbox/Cosy Crawler 2` is a 17 MB `.git`
-directory with **no working-tree files at all**. Don't guess at it in a lesson — investigate when
-he asks.
+**Solved 2026-09-07 — `~/Sandbox/Cosy Crawler 2`.** Not a mystery. The `family` remote was renamed
+'family' → 'games' and absorbed Cosy Crawler 2 under `cosy-crawler-2/` in commits `9be4944` /
+`781e8b6`; the local 17 MB `.git` with no working tree is the leftover. Same tangle as
+`family-planner`, same fix: after lesson 04.
 
 **Environment fact:** `init.defaultBranch` was unset as of 2026-09-05, so `git init` would have
 produced `master` plus a hint paragraph. Lesson 03 step 1 sets it to `main`.
